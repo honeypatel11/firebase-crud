@@ -1,6 +1,7 @@
 import { addDoc, deleteDoc, doc, getDocs, updateDoc, collection } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../config/firebase";
+import { motion } from "framer-motion";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -19,34 +20,22 @@ const Books = () => {
 
   const addBook = async () => {
     if (!input.name || !input.Isbn || !input.author) return;
-    try {
-      await addDoc(collection(db, "book"), input);
-      setInput({ name: "", Isbn: "", author: "" });
-      fetchData();
-    } catch (err) {
-      console.error(err);
-    }
+    await addDoc(collection(db, "book"), input);
+    setInput({ name: "", Isbn: "", author: "" });
+    fetchData();
   };
 
   const deleteBook = async (id) => {
-    try {
-      await deleteDoc(doc(db, "book", id));
-      fetchData();
-    } catch (err) {
-      console.error(err);
-    }
+    await deleteDoc(doc(db, "book", id));
+    fetchData();
   };
 
   const updateBook = async () => {
     if (!editId) return;
-    try {
-      await updateDoc(doc(db, "book", editId), input);
-      setEditId(null);
-      setInput({ name: "", Isbn: "", author: "" });
-      fetchData();
-    } catch (err) {
-      console.error(err);
-    }
+    await updateDoc(doc(db, "book", editId), input);
+    setEditId(null);
+    setInput({ name: "", Isbn: "", author: "" });
+    fetchData();
   };
 
   const handleEdit = (book) => {
@@ -56,119 +45,121 @@ const Books = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-100 to-pink-100 p-6">
-      <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-lg p-8">
-        <h1 className="text-4xl font-bold text-center text-purple-700 mb-10 tracking-tight">
-          📚 Book Manager
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-blue-100 flex flex-col items-center py-10 px-4">
+      <div className="w-full max-w-6xl bg-white/70 backdrop-blur-md shadow-2xl rounded-3xl p-8 border border-indigo-200">
+        <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-10">
+          📚 Book Inventory System
         </h1>
 
+        <motion.div
+          initial={{ opacity: 0, y: -25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-white/80 border border-indigo-200 rounded-2xl shadow-lg p-8 mb-14"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-     
-          <label className="block">
-            <span className="text-purple-700 font-medium">Book Name</span>
-            <input
-              type="text"
-              name="name"
-              placeholder="Enter book name"
-              value={input.name}
-              onChange={(e) => setInput({ ...input, name: e.target.value })}
-              className="mt-1 w-full px-4 py-2 border border-purple-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all"
-            />
-          </label>
-
-   
-          <label className="block">
-            <span className="text-purple-700 font-medium">ISBN</span>
-            <input
-              type="number"
-              name="Isbn"
-              placeholder="Enter ISBN"
-              value={input.Isbn}
-              onChange={(e) => setInput({ ...input, Isbn: e.target.value })}
-              className="mt-1 w-full px-4 py-2 border border-purple-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all"
-            />
-          </label>
+            <div className="relative">
+              <label className="block text-sm font-semibold text-gray-600 mb-1">
+                Book Name
+              </label>
+              <input
+                type="text"
+                placeholder="Enter book name"
+                value={input.name}
+                onChange={(e) => setInput({ ...input, name: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none placeholder-gray-400"
+              />
+            </div>
 
     
-          <label className="block">
-            <span className="text-purple-700 font-medium">Author</span>
-            <input
-              type="text"
-              name="author"
-              placeholder="Enter author name"
-              value={input.author}
-              onChange={(e) => setInput({ ...input, author: e.target.value })}
-              className="mt-1 w-full px-4 py-2 border border-purple-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all"
-            />
-          </label>
-        </div>
+            <div className="relative">
+              <label className="block text-sm font-semibold text-gray-600 mb-1">
+                ISBN Number
+              </label>
+              <input
+                type="number"
+                placeholder="Enter ISBN"
+                value={input.Isbn}
+                onChange={(e) => setInput({ ...input, Isbn: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none placeholder-gray-400 appearance-none"
+              />
+            </div>
 
-  
-        <div className="text-center mb-10">
-          <button
-            onClick={editId ? updateBook : addBook}
-            className={`px-8 py-3 rounded-md text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 ${
-              editId
-                ? "bg-yellow-500 hover:bg-yellow-600"
-                : "bg-purple-600 hover:bg-purple-700"
-            }`}
-          >
-            {editId ? "Update Book" : "Add Book"}
-          </button>
-        </div>
+            <div className="relative">
+              <label className="block text-sm font-semibold text-gray-600 mb-1">
+                Author Name
+              </label>
+              <input
+                type="text"
+                placeholder="Enter author name"
+                value={input.author}
+                onChange={(e) => setInput({ ...input, author: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none placeholder-gray-400"
+              />
+            </div>
+          </div>
+
+      
+          <div className="text-center mt-8">
+            <button
+              onClick={editId ? updateBook : addBook}
+              className={`px-10 py-3 font-semibold text-white rounded-lg shadow-md transition-all duration-300 ${
+                editId
+                  ? "bg-yellow-500 hover:bg-yellow-600"
+                  : "bg-indigo-600 hover:bg-indigo-700"
+              }`}
+            >
+              {editId ? "Update Book" : "Add Book"}
+            </button>
+          </div>
+        </motion.div>
 
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-300 rounded-md overflow-hidden shadow-md bg-white">
-            <thead className="bg-purple-200 text-purple-900">
-              <tr>
-                <th className="py-3 px-4 text-left">#</th>
-                <th className="py-3 px-4 text-left">Name</th>
-                <th className="py-3 px-4 text-left">ISBN</th>
-                <th className="py-3 px-4 text-left">Author</th>
-                <th className="py-3 px-4 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {books.map((book, idx) => (
-                <tr
-                  key={book.id}
-                  className="hover:bg-purple-50 transition duration-200"
-                >
-                  <td className="py-3 px-4 border-t">{idx + 1}</td>
-                  <td className="py-3 px-4 border-t">{book.name}</td>
-                  <td className="py-3 px-4 border-t">{book.Isbn}</td>
-                  <td className="py-3 px-4 border-t">{book.author}</td>
-                  <td className="py-3 px-4 border-t space-x-2">
-                    <button
-                      onClick={() => handleEdit(book)}
-                      className="px-4 py-1 text-sm bg-yellow-400 hover:bg-yellow-500 text-white rounded-md shadow-sm transition"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => deleteBook(book.id)}
-                      className="px-4 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md shadow-sm transition"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {books.length === 0 && (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="text-center py-6 text-gray-500 italic bg-gray-50"
+        {books.length === 0 ? (
+          <p className="text-center text-gray-500 italic text-lg mt-10">
+            No books added yet. 📘 Start by adding one above.
+          </p>
+        ) : (
+          <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {books.map((book) => (
+              <motion.div
+                key={book.id}
+                layout
+                whileHover={{ scale: 1.03 }}
+                className="bg-white/80 rounded-2xl shadow-lg p-6 border border-indigo-100 hover:border-indigo-400 transition-all duration-300"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-indigo-700 truncate">
+                    {book.name}
+                  </h2>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-gray-700">
+                    <span className="font-semibold">ISBN:</span> {book.Isbn}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Author:</span> {book.author}
+                  </p>
+                </div>
+                <div className="flex justify-end space-x-3 mt-5">
+                  <button
+                    onClick={() => handleEdit(book)}
+                    className="px-4 py-1.5 bg-yellow-400 hover:bg-yellow-500 text-white text-sm rounded-md shadow-sm transition"
                   >
-                    No books found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => deleteBook(book.id)}
+                    className="px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white text-sm rounded-md shadow-sm transition"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </div>
   );
