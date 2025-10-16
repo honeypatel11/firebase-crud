@@ -2,7 +2,7 @@
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
 import Signin from './pages/Signin'
 import Books from './pages/Books'
-import SignUp from './pages/signup'
+import SignUp from './pages/SignUp'
 
 
 const App = () => {
@@ -11,7 +11,6 @@ const App = () => {
 
       <Routes>
         <Route path='/' element={<Signin />} />
-        
         <Route path='/books' element={<Books />} />
         <Route path='/sign-up' element={<SignUp/>} />
       </Routes>
