@@ -3,7 +3,7 @@ import { useState } from "react";
 import { app } from "../config/firebase";
 import { Link, useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const SignUp = () => {
   const auth = getAuth(app);
   const navigate = useNavigate();
 
@@ -57,4 +57,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignUp;
